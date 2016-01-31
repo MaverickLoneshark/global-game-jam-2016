@@ -11,8 +11,6 @@ Engine.prototype.start = function() {
 		return thisEngine.loop();
 	}, 0);
 	
-console.log(this);
-	
 	return;
 }
 

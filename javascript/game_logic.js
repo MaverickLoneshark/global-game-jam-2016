@@ -1,4 +1,17 @@
 (function(){
+	function GameObject() {
+		position: [0, 0, 0],
+		audioProperties: {
+			source: null,
+			volume: 0
+		}
+		
+		return;
+	}
+	
+	var Coin = new GameObject();
+	
+	
 	var engine = new Engine();
 	engine.deltaTime = new Date().getTime();
 	
@@ -7,7 +20,7 @@
 			difference = date.getTime() - this.deltaTime;
 		
 		if(difference >= 1000) {
-console.log("Frame time interval: " + difference);
+//console.log("Frame time interval: " + difference);
 			this.deltaTime = date.getTime();
 		}
 		
