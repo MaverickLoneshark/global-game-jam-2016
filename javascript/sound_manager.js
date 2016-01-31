@@ -58,7 +58,7 @@ Engine.prototype.SoundManager = (function() {
 		
 		if(audioIndex >= 0) {
 			this.audioElement[audioIndex].src = source;
-			this.audioElement[audioIndex].volume = audioProperties.volume;
+			//this.audioElement[audioIndex].volume = audioProperties.volume;
 			this.movePanner(audioIndex, audioProperties.position);
 console.log("Attempting to play");
 console.log(this.audioElement[audioIndex]);
@@ -68,8 +68,8 @@ console.log(this.audioElement[audioIndex]);
 	}
 	
 	SoundManager.prototype.movePanner = function(audioIndex, position) {
-		this.panner[audioIndex].pan.value = 0.0;//position[0];
-		//this.audioElement[audioIndex].volume = 1 + (position[2] > 0 ? -position[2] : position[2]);
+		this.panner[audioIndex].pan.value = position[0];
+		this.audioElement[audioIndex].volume = 1 + (position[2] > 0 ? -position[2] : position[2]);
 		
 		return;
 	}
@@ -89,7 +89,7 @@ console.log(this.audioElement[audioIndex]);
 			startTime = new Date().getTime(),
 			deltaTime = startTime,
 			currentTime = startTime;
-		while((currentTime - startTime) < 25000) {
+		while((currentTime - startTime) < 27000) {
 			if((currentTime - deltaTime) >= 3000) {
 				monster.audioProperties.position = [-1 + (i % 3), 0, 0];
 				this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
