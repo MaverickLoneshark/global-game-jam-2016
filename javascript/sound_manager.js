@@ -91,19 +91,19 @@ console.log(this.audioElement[audioIndex]);
 			deltaTime = startTime,
 			currentTime = startTime;
 		
-		monster.audioProperties.position = [-1.0, 0, 0];
+		monster.audioProperties.position = [-1.0f, 0, 0];
 		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
 		while((currentTime - deltaTime) < 3000) {
 			currentTime = new Date().getTime();
 		}
 		
-		monster.audioProperties.position = [1.0, 0, 0];
+		monster.audioProperties.position = [1.0f, 0, 0];
 		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
 		while((currentTime - deltaTime) < 3000) {
 			currentTime = new Date().getTime();
 		}
 		
-		monster.audioProperties.position = [0.0, 0, 0];
+		monster.audioProperties.position = [0.0f, 0, 0];
 		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
 		while((currentTime - deltaTime) < 3000) {
 			currentTime = new Date().getTime();
