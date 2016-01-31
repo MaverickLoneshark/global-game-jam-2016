@@ -6,6 +6,8 @@ Engine.prototype.SoundManager = (function() {
 		var i;
 		for(i = 0; i < 6; i++) {
 			this.audioElement[i] = document.createElement("audio");
+//disable this for production
+this.audioElement[i].crossOrigin = "anonymous";
 			this.panner[i] = this.createPanner(this.audioElement[i]);
 		}
 		
@@ -58,18 +60,16 @@ Engine.prototype.SoundManager = (function() {
 		
 		if(audioIndex >= 0) {
 			this.audioElement[audioIndex].src = source;
-			//this.audioElement[audioIndex].volume = audioProperties.volume;
-			this.movePanner(audioIndex, audioProperties.position);
-console.log("Attempting to play");
-console.log(this.audioElement[audioIndex]);
+			this.audioElement[audioIndex].load();
+			this.moveAudio(audioIndex, audioProperties.position);
 			this.audioElement[audioIndex].play();
 		}
 		return;
 	}
 	
-	SoundManager.prototype.movePanner = function(audioIndex, position) {
+	SoundManager.prototype.moveAudio = function(audioIndex, position) {
 		this.panner[audioIndex].pan.value = position[0];
-		this.audioElement[audioIndex].volume = 1 + (position[2] > 0 ? -position[2] : position[2]);
+		this.audioElement[audioIndex].volume = (position[2] > 0) ? (1 - position[2]) : (1 + position[2]);
 		
 		return;
 	}
@@ -78,52 +78,67 @@ console.log(this.audioElement[audioIndex]);
 		//test whatever you want here =)
 		
 		var monster = {
-			audioProperties: {
-				source: ["assets/monster.wav"],
-				volume: 1.0,
-				position: [0,0,0]
-			}
-		}
+				audioProperties: {
+					source: ["http://maverickloneshark.github.io/global-game-jam-2016/assets/monster.wav"],
+					volume: 1.0,
+					position: [0,0,0]
+				}
+			},
+			thisSoundManager = this;
 		
-		
-		var i,
-			startTime = new Date().getTime(),
-			deltaTime = startTime,
-			currentTime = startTime;
-		
-		monster.audioProperties.position = [-1.0, 0, 0];
-		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
-		while((currentTime - deltaTime) < 3000) {
-			currentTime = new Date().getTime();
-		}
-		
-		monster.audioProperties.position = [1.0, 0, 0];
-		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
-		while((currentTime - deltaTime) < 3000) {
-			currentTime = new Date().getTime();
-		}
-		
-		monster.audioProperties.position = [0.0, 0, 0];
-		this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
-		while((currentTime - deltaTime) < 3000) {
-			currentTime = new Date().getTime();
-		}
-		
-		/*
-		startTime = new Date().getTime();
-		deltaTime = startTime,
-		currentTime = startTime;
-		
-		while((currentTime - startTime) < 27000) {
-			if((currentTime - deltaTime) >= 3000) {
-				monster.audioProperties.position = [(-1 + (i % 3)), 0, 0];
-				this.playAudio(monster.audioProperties.source[0], monster.audioProperties);
-				deltaTime = currentTime;
-			}
+		function callMonster(monster, position) {
+			monster.audioProperties.position = position;
+			console.log("calling monster @" + monster.audioProperties.position);
+			thisSoundManager.playAudio(monster.audioProperties.source[0], monster.audioProperties);
 			
-			currentTime = new Date().getTime();
+			return;
 		}
-		*/
+		
+		callMonster(monster, [-1.0, 0, 0.9]);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, 0.5]);
+		}, 4500);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, 0.0]);
+		}, 9000);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, -0.5]);
+		}, 13500);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.9]);
+		}, 18000);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.5]);
+		}, 22500);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.0]);
+		}, 27000);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, -0.5]);
+		}, 31500);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0.9]);
+		}, 36000);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0.5]);
+		}, 40500);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0]);
+		}, 45000);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, -0.5]);
+		}, 49500);
 		
 		return;
 	}
