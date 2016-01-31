@@ -1,9 +1,6 @@
 (function(){
 	var engine = new Engine(),
-		Coin = new GameObject(),
-		Monster = new GameObject(),
-		Obstacle = new GameObject(),
-		Player = new GameObject(),
+		player = new Player(),
 		gameSounds = [
 			"assets/coin_sound.wav",
 			"assets/gather_sound.mp3",
@@ -18,7 +15,7 @@
 		];
 	
 	function GameObject() {
-		this.position = [0, 0, 0];
+		this.position = [0, 0, 2];
 		this.audioProperties = {
 			source: [],
 			volume: 0
@@ -27,13 +24,43 @@
 		return;
 	}
 	
-	Player.score = 0;
-	Player.hitpoints = 3;
+	function Player() {
+		var player = new GameObject();
+		player.score = 0;
+		player.hitpoints = 3;
+		
+		return player;
+	}
+	
+	function Coin() {
+		var coin = new GameObject();
+		coin.audioProperties.source[0] = gameSounds[0];
+		
+		return coin;
+	}
+	
+	function Monster() {
+		var monster = new GameObject();
+		monster.audioProperties.source[0] = gameSounds[5];
+		
+		return monster;
+	}
+	
+	function Obstacle() {
+		var obstacle = new GameObject();
+		obstacle.audioProperties.source[0] = gameSounds[4];
+		
+		return obstacle;
+	}
+	
+	var testCoin = new Coin(),
+	testMonster = new Monster(),
+	testObstacle = new Obstacle();
 	
 	//engine.SoundManager.loadSoundLibary(gameSounds);
-	Coin.audioProperties.source[0] = gameSounds[0];
-	Monster.audioProperties.source[0] = gameSounds[5];
-	Obstacle.audioProperties.source[0] = gameSounds[4];
+	
+	console.log(Coin);
+	console.log(testCoin);
 	
 	engine.deltaTime = new Date().getTime();
 	

@@ -15,7 +15,7 @@ this.audioElement[i].crossOrigin = "anonymous";
 		console.log(this);
 		
 		//comment this.text() for production!
-		this.test();
+		//this.test();
 		
 		return;
 	}
