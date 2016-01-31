@@ -1,19 +1,9 @@
 (function(){
-	function GameObject() {
-		var position = [0, 0, 0],
-			audioProperties = {
-				source: [],
-				volume: 0
-			}
-		
-		return;
-	}
-	
-	var Coin = new GameObject(),
+	var engine = new Engine(),
+		Coin = new GameObject(),
 		Monster = new GameObject(),
 		Obstacle = new GameObject(),
 		Player = new GameObject(),
-		engine = new Engine(),
 		gameSounds = [
 			"assets/coin_sound.wav",
 			"assets/gather_sound.mp3",
@@ -27,14 +17,23 @@
 			"assets/trainsound.wav"
 		];
 	
+	function GameObject() {
+		this.position = [0, 0, 0];
+		this.audioProperties = {
+			source: [],
+			volume: 0
+		};
+		
+		return;
+	}
+	
 	Player.score = 0;
 	Player.hitpoints = 3;
 	
-	engine.SoundManager.loadSoundLibary(gameSounds);
+	//engine.SoundManager.loadSoundLibary(gameSounds);
 	Coin.audioProperties.source[0] = gameSounds[0];
 	Monster.audioProperties.source[0] = gameSounds[5];
 	Obstacle.audioProperties.source[0] = gameSounds[4];
-	
 	
 	engine.deltaTime = new Date().getTime();
 	

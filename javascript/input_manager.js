@@ -1,6 +1,7 @@
 Engine.prototype.InputManager = (function() {
 	function InputManager() {
 		console.log("InputManager loaded");
+		console.log(this);
 		//var gamepads = navigator.getGamepads();
 		//console.log(gamepads);
 		
