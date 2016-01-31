@@ -1,7 +1,16 @@
 Engine.prototype.SoundManager = (function() {
 	function SoundManager() {
-		console.log("SoundManager loaded");
+		var AudioContext = window.AudioContext || window.webkitAudioContext;
+		var audioCtx = new AudioContext();
 
+		var panner = audioCtx.createPanner();
+		panner.setPosition(0,0,0);
+
+		var listener = audioCtx.listener();
+		listener.setPosition(0,0,0);
+		listener.setOrientation(0,0,-1);
+
+		console.log("SoundManager loaded");
 		this.audioElement = document.createElement("audio");
 
 		this.bufferLoader = this.loadBuffer();
@@ -14,6 +23,7 @@ Engine.prototype.SoundManager = (function() {
 	SoundManager.prototype.playAudio = function(audioProperties) {
 		this.audioElement.src = audioProperties.source;
 		this.audioElement.volume = audioProperties.volume;
+		panner.setPosition(this)
 		//this.audioElement.other_properties = audioProperties.other_properties;
 
 		return this.audioElement.play();
@@ -36,12 +46,16 @@ Engine.prototype.SoundManager = (function() {
 		return bufferLoader;
 	}
 
+
+	SoundManager.prototype.movePanner(position) {
+		panner.setPosition(position[0], position[1], position[2]);
+	}
 	SoundManager.prototype.test = function() {
 		//test whatever you want here =)
 
 		//WARNING: actual game object code is subject to change and defined in game logic
 		/*var coin = {
-			//position: {x: 0, y: 0, z:0},
+			//position: [0, 0, 0],
 			//ObjectType: "coin",
 			//...
 			audioProperties: {
@@ -51,6 +65,7 @@ Engine.prototype.SoundManager = (function() {
 		}*/
 
 		var monster = {
+			location: [0,0,0]
 			audioProperties: {
 				source: this.bufferLoader[5],
 				volume: 1
