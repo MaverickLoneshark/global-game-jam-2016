@@ -10,9 +10,7 @@ Engine.prototype.start = function() {
 	this.intervalID = setInterval(function() {
 		return thisEngine.loop();
 	}, 0);
-
-console.log(this);
-
+	
 	return;
 }
 

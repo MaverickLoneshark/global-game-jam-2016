@@ -1,81 +1,145 @@
 Engine.prototype.SoundManager = (function() {
 	function SoundManager() {
-		var AudioContext = window.AudioContext || window.webkitAudioContext;
-		var audioCtx = new AudioContext();
-
-		var panner = audioCtx.createPanner();
-		panner.setPosition(0,0,0);
-
-		var listener = audioCtx.listener();
-		listener.setPosition(0,0,0);
-		listener.setOrientation(0,0,-1);
-
+		this.audioElement = [];
+		this.panner = [];
+		
+		var i;
+		for(i = 0; i < 6; i++) {
+			this.audioElement[i] = document.createElement("audio");
+//disable this for production
+//this.audioElement[i].crossOrigin = "anonymous";
+			this.panner[i] = this.createPanner(this.audioElement[i]);
+		}
+		
 		console.log("SoundManager loaded");
-		this.audioElement = document.createElement("audio");
-
-		this.bufferLoader = this.loadBuffer();
+		console.log(this);
+		
 		//comment this.text() for production!
 		this.test();
-
+		
 		return;
 	}
-
-	SoundManager.prototype.playAudio = function(audioProperties) {
-		this.audioElement.src = audioProperties.source;
-		this.audioElement.volume = audioProperties.volume;
-		panner.setPosition(this)
-		//this.audioElement.other_properties = audioProperties.other_properties;
-
-		return this.audioElement.play();
+	
+	SoundManager.prototype.loadSoundLibrary = function(soundArray) {
+		this.soundLibrary = soundArray;
+		
+		return;
+	}
+	
+	SoundManager.prototype.createPanner = function(audioElement) {
+		var AudioContext = window.AudioContext || window.webkitAudioContext,
+			audioCtx = new AudioContext(),
+			source = audioCtx.createMediaElementSource(audioElement),
+			panner = audioCtx.createStereoPanner();
+		
+		source.connect(panner);
+		panner.connect(audioCtx.destination);
+		panner.pan.value = 0;
+		audioCtx.listener.setPosition(0,0,0);
+		audioCtx.listener.setOrientation(0,0,-1, 0, 1, 0);
+		
+		return panner;
 	}
 
-	SoundManager.prototype.loadBuffer = function(){
-		var bufferLoader =  [
-					"assets/coin_sound.wav",
-					"assets/gather_sound.mp3",
-					"assets/anvil.wav",
-					"assets/clang.wav",
-					"assets/low_bell.wav",
-					"assets/monster.wav",
-					"assets/pan_dong.wav",
-					"assets/pan_hit.wav",
-					"assets.tinkling.wav",
-					"assets/trainsound.wav"
-				];
-
-		return bufferLoader;
-	}
-
-
-	SoundManager.prototype.movePanner(position) {
-		panner.setPosition(position[0], position[1], position[2]);
-	}
-	SoundManager.prototype.test = function() {
-		//test whatever you want here =)
-
-		//WARNING: actual game object code is subject to change and defined in game logic
-		/*var coin = {
-			//position: [0, 0, 0],
-			//ObjectType: "coin",
-			//...
-			audioProperties: {
-				source: this.bufferLoader[8],
-				volume: 0.4
-			}
-		}*/
-
-		var monster = {
-			location: [0,0,0]
-			audioProperties: {
-				source: this.bufferLoader[5],
-				volume: 1
+	SoundManager.prototype.getFreeAudioElementIndex = function() {
+		var audioIndex = -1,
+			i;
+		
+		for(i = 0; i < this.audioElement.length; i++) {
+			if((!this.audioElement[i].duration) || this.audioElement[i].ended) {
+				audioIndex = i;
+				break;
 			}
 		}
-
-
-		//this.playAudio(coin.audioProperties);
-		this.playAudio(monster.audioProperties);
-
+		
+		return audioIndex;
+	}
+	
+	SoundManager.prototype.playAudio = function(source, audioProperties) {
+		var audioIndex = this.getFreeAudioElementIndex();
+		
+		if(audioIndex >= 0) {
+			this.audioElement[audioIndex].src = source;
+			this.audioElement[audioIndex].load();
+			this.moveAudio(audioIndex, audioProperties.position);
+			this.audioElement[audioIndex].play();
+		}
+		return;
+	}
+	
+	SoundManager.prototype.moveAudio = function(audioIndex, position) {
+		this.panner[audioIndex].pan.value = position[0];
+		this.audioElement[audioIndex].volume = (position[2] > 0) ? (1 - position[2]) : (1 + position[2]);
+		
+		return;
+	}
+	
+	SoundManager.prototype.test = function() {
+		//test whatever you want here =)
+		
+		var monster = {
+				audioProperties: {
+					source: ["http://maverickloneshark.github.io/global-game-jam-2016/assets/monster.wav"],
+					volume: 1.0,
+					position: [0,0,0]
+				}
+			},
+			thisSoundManager = this;
+		
+		function callMonster(monster, position) {
+			monster.audioProperties.position = position;
+			console.log("calling monster @" + monster.audioProperties.position);
+			thisSoundManager.playAudio(monster.audioProperties.source[0], monster.audioProperties);
+			
+			return;
+		}
+		
+		callMonster(monster, [-1.0, 0, 0.9]);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, 0.5]);
+		}, 4500);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, 0.0]);
+		}, 9000);
+		
+		setTimeout(function() {
+			callMonster(monster, [-1.0, 0, -0.5]);
+		}, 13500);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.9]);
+		}, 18000);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.5]);
+		}, 22500);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, 0.0]);
+		}, 27000);
+		
+		setTimeout(function() {
+			callMonster(monster, [1.0, 0, -0.5]);
+		}, 31500);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0.9]);
+		}, 36000);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0.5]);
+		}, 40500);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, 0]);
+		}, 45000);
+		
+		setTimeout(function() {
+			callMonster(monster, [0.0, 0, -0.5]);
+		}, 49500);
+		
 		return;
 	}
 
