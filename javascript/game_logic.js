@@ -54,8 +54,8 @@
 	}
 	
 	var testCoin = new Coin(),
-	testMonster = new Monster(),
-	testObstacle = new Obstacle();
+		testMonster = new Monster(),
+		testObstacle = new Obstacle();
 	
 	//engine.SoundManager.loadSoundLibary(gameSounds);
 	
@@ -63,6 +63,8 @@
 	console.log(testCoin);
 	
 	engine.deltaTime = new Date().getTime();
+	
+	
 	
 	engine.loop = function() {
 		var date = new Date(),

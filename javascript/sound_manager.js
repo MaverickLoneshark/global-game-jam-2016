@@ -7,7 +7,7 @@ Engine.prototype.SoundManager = (function() {
 		for(i = 0; i < 6; i++) {
 			this.audioElement[i] = document.createElement("audio");
 //disable this for production
-this.audioElement[i].crossOrigin = "anonymous";
+//this.audioElement[i].crossOrigin = "anonymous";
 			this.panner[i] = this.createPanner(this.audioElement[i]);
 		}
 		
@@ -15,7 +15,7 @@ this.audioElement[i].crossOrigin = "anonymous";
 		console.log(this);
 		
 		//comment this.text() for production!
-		//this.test();
+		this.test();
 		
 		return;
 	}
