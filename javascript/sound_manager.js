@@ -7,15 +7,14 @@ Engine.prototype.SoundManager = (function() {
 		for(i = 0; i < 6; i++) {
 			this.audioElement[i] = document.createElement("audio");
 //disable this for production
-//this.audioElement[i].crossOrigin = "anonymous";
+this.audioElement[i].crossOrigin = "anonymous";
 			this.panner[i] = this.createPanner(this.audioElement[i]);
 		}
 		
-		console.log("SoundManager loaded");
-		console.log(this);
-		
-		//comment this.text() for production!
-		this.test();
+		if(window.DEBUG) {
+			console.log("SoundManager loaded");
+			console.log(this);
+		}
 		
 		return;
 	}
@@ -55,13 +54,13 @@ Engine.prototype.SoundManager = (function() {
 		return audioIndex;
 	}
 	
-	SoundManager.prototype.playAudio = function(source, audioProperties) {
+	SoundManager.prototype.playAudio = function(gameObject, soundIndex) {
 		var audioIndex = this.getFreeAudioElementIndex();
 		
 		if(audioIndex >= 0) {
-			this.audioElement[audioIndex].src = source;
-			this.audioElement[audioIndex].load();
-			this.moveAudio(audioIndex, audioProperties.position);
+			this.audioElement[audioIndex].src = gameObject.audioProperties.source[soundIndex];
+			//this.audioElement[audioIndex].load();
+			this.moveAudio(audioIndex, gameObject.audioProperties.position);
 			this.audioElement[audioIndex].play();
 		}
 		return;
@@ -77,19 +76,17 @@ Engine.prototype.SoundManager = (function() {
 	SoundManager.prototype.test = function() {
 		//test whatever you want here =)
 		
-		var monster = {
-				audioProperties: {
-					source: ["http://maverickloneshark.github.io/global-game-jam-2016/assets/monster.wav"],
-					volume: 1.0,
-					position: [0,0,0]
-				}
-			},
+		var monster = GAME.GameObjects.createMonster(),
 			thisSoundManager = this;
+		
+		monster.audioProperties.source[0] = "http://maverickloneshark.github.io/global-game-jam-2016/assets/monster.wav";
+		monster.audioProperties.volume = 1.0;
+		monster.audioProperties.position = [0, 0, 0];
 		
 		function callMonster(monster, position) {
 			monster.audioProperties.position = position;
 			console.log("calling monster @" + monster.audioProperties.position);
-			thisSoundManager.playAudio(monster.audioProperties.source[0], monster.audioProperties);
+			thisSoundManager.playAudio(monster, 0);
 			
 			return;
 		}

@@ -1,7 +1,10 @@
 Engine.prototype.InputManager = (function() {
 	function InputManager() {
-		console.log("InputManager loaded");
-		console.log(this);
+		if(window.DEBUG) {
+			console.log("InputManager loaded");
+			console.log(this);
+		}
+		
 		//var gamepads = navigator.getGamepads();
 		//console.log(gamepads);
 		
@@ -12,13 +15,17 @@ Engine.prototype.InputManager = (function() {
 	}
 
 	InputManager.prototype.handleInputDown = function(event) {
-		console.log(String.fromCharCode(event.keyCode) + " pressed ("+ event.keyCode +")");
+		if(window.DEBUG) {
+			console.log(String.fromCharCode(event.keyCode) + " pressed ("+ event.keyCode +")");
+		}
 		
 		return;
 	}
 
 	InputManager.prototype.handleInputUp = function(event) {
-		console.log(String.fromCharCode(event.keyCode) + " released ("+ event.keyCode +")");
+		if(window.DEBUG) {
+			console.log(String.fromCharCode(event.keyCode) + " released ("+ event.keyCode +")");
+		}
 		
 		return;
 	}
